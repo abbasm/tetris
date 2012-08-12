@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>テトリス</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        canvas{
+            display: block;
+            margin: auto;
+            border: 1px solid black;
+            background-color: lightblue;
+        }
+    </style>
+</head>
+<body>
+    
+    <script src='tetris.js'></script>
+    <script>
+        var tetris = tetris2 = keyswitch = null;
+
+        window.onload = function (){
+            keyswitch = tetris = new Tetris('red'); // テトリスオブジェクトを一つ作る
+            tetris.name = '一個目';
+            
+            //停止・開始ボタン
+            var stopbtn = document.createElement('button');
+            stopbtn.setAttribute('onClick', 'tetris.stop();');
+            stopbtn.innerHTML = 'Start/Stop';
+            document.body.appendChild(stopbtn);
+            //リセットボタン
+            var restartbtn = document.createElement('button');
+            restartbtn.setAttribute('onClick', 'tetris.restart();');
+            restartbtn.innerHTML = 'Restart';
+            document.body.appendChild(restartbtn);
+            //キーボードフォーカスボタン
+            var forcusbtn = document.createElement('button');
+            forcusbtn.setAttribute('onClick', '(function (){keyswitch = tetris;})();');
+            forcusbtn.innerHTML = 'Key Forcus';
+            document.body.appendChild(forcusbtn);
+            
+            tetris2 = new Tetris();
+            tetris2.name = '二個目';
+            
+            stopbtn = document.createElement('button');
+            stopbtn.setAttribute('onClick', 'tetris2.stop();');
+            stopbtn.innerHTML = 'Start/Stop2';
+            document.body.appendChild(stopbtn);
+            
+            restartbtn = document.createElement('button');
+            restartbtn.setAttribute('onClick', 'tetris2.restart();');
+            restartbtn.innerHTML = 'Restart2';
+            document.body.appendChild(restartbtn);
+            
+            forcusbtn = document.createElement('button');
+            forcusbtn.setAttribute('onClick', '(function (){keyswitch = tetris2;})();');
+            forcusbtn.innerHTML = 'Key Forcus2';
+            document.body.appendChild(forcusbtn);
+        }
+
+        document.body.onkeydown = function(e) {
+            var keys = {
+                37: 'left',
+                39: 'right',
+                40: 'down',
+                38: 'rotate'
+            };
+            if (typeof keys[e.keyCode] != 'undefined' && keyswitch != null) {
+                keyswitch.keyPress(keys[e.keyCode]);
+            }
+        };
+
+
+    </script>
+ 
+</body>
+</html>
