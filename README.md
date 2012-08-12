@@ -3,6 +3,8 @@ tetris
 
 ### A HTML5 canvas simple tetris lib 
 
+DEMO : http://tetrislib.herokuapp.com
+
 To create Tetris object:
 
     var tetris = new Tetris();  

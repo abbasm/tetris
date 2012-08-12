@@ -19,10 +19,10 @@
     
     <script src='tetris.js'></script>
     <script>
-        var tetris = tetris2 = keyswitch = null;
+        var tetris = tetris2 = forcus = null;
 
-        window.onload = function (){
-            keyswitch = tetris = new Tetris('red'); // テトリスオブジェクトを一つ作る
+        window.onload = function() {
+            forcus = tetris = new Tetris('red'); // テトリスオブジェクトを一つ作る
             tetris.name = '一個目';
             
             //停止・開始ボタン
@@ -37,7 +37,7 @@
             document.body.appendChild(restartbtn);
             //キーボードフォーカスボタン
             var forcusbtn = document.createElement('button');
-            forcusbtn.setAttribute('onClick', '(function (){keyswitch = tetris;})();');
+            forcusbtn.setAttribute('onClick', 'forcus = tetris;');
             forcusbtn.innerHTML = 'Key Forcus';
             document.body.appendChild(forcusbtn);
             
@@ -55,11 +55,11 @@
             document.body.appendChild(restartbtn);
             
             forcusbtn = document.createElement('button');
-            forcusbtn.setAttribute('onClick', '(function (){keyswitch = tetris2;})();');
+            forcusbtn.setAttribute('onClick', 'forcus = tetris2;');
             forcusbtn.innerHTML = 'Key Forcus2';
             document.body.appendChild(forcusbtn);
         }
-
+        
         document.body.onkeydown = function(e) {
             var keys = {
                 37: 'left',
@@ -67,12 +67,14 @@
                 40: 'down',
                 38: 'rotate'
             };
-            if (typeof keys[e.keyCode] != 'undefined' && keyswitch != null) {
-                keyswitch.keyPress(keys[e.keyCode]);
+            if (typeof keys[e.keyCode] != 'undefined' && forcus != null) {
+                forcus.keyPress(keys[e.keyCode]);
             }
         };
-
-
+        
+        document.body.onclick = function() {
+            forcus.keyPress('rotate');
+        };
     </script>
  
 </body>
