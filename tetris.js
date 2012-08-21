@@ -7,7 +7,7 @@
 (function (window){
     var document = window.document;
     
-    var COLS = 10, ROWS = 15, BLOCK = 20;
+    var COLS = 10, ROWS = 15, BLOCK = 20, FLICK = 50;
     var shapes = [
         [ 1, 1, 1, 1 ],
         [ 1, 1, 1, 0,  1 ],
@@ -22,6 +22,7 @@
     ];
 
     function Tetris(){
+        var _this = this;
         var canvas = document.createElement('canvas');
         canvas.width = BLOCK * COLS;
         canvas.height = BLOCK * ROWS;
@@ -33,6 +34,9 @@
         this.timer1 = this.timer2 = null;
         this.init();
         this.start();
+        canvas.addEventListener("touchstart", function(e){flick(e, _this)}, false);
+        canvas.addEventListener("touchmove", function(e){flick(e, _this)}, false);
+        canvas.addEventListener("touchend", function(e){flick(e, _this)}, false);
     }
     
     Tetris.prototype.restart = function(){
@@ -233,6 +237,33 @@
         }
     }
     
+    function flick(e, obj) {
+        e.preventDefault();
+        var touch = e.touches[0];
+        if(e.type == "touchstart"){
+            obj.startX = touch.pageX;
+            obj.startY = touch.pageY;
+        }
+        if(e.type == "touchmove"){
+            obj.moveX = touch.pageX;
+            obj.moveY = touch.pageY;
+        }
+        if(e.type == "touchend"){
+            var diffX = obj.startX - obj.moveX;
+            var diffY = obj.startY - obj.moveY;
+            if (diffX > FLICK){
+                obj.keyPress('left');
+            } else if (diffX < -FLICK){
+                obj.keyPress('right');
+            } else if (diffY > FLICK){
+                obj.keyPress('rotate');
+            } else if (diffY < -FLICK){
+                obj.keyPress('down');
+            }
+        }
+    }
+
+
     window.Tetris = Tetris;
     
 })(window);

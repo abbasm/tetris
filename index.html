@@ -16,16 +16,15 @@
     </style>
 </head>
 <body>
-    
     <script src='tetris.js'></script>
     <script>
         var tetris = tetris2 = forcus = null;
-
+        
         window.onload = function() {
             forcus = tetris = new Tetris('red'); // テトリスオブジェクトを一つ作る
             tetris.name = '一個目';
             
-            //停止・開始ボタン
+           //停止・開始ボタン
             var stopbtn = document.createElement('button');
             stopbtn.setAttribute('onClick', 'tetris.stop();');
             stopbtn.innerHTML = 'Start/Stop';
@@ -67,14 +66,11 @@
                 40: 'down',
                 38: 'rotate'
             };
+            e.preventDefault();
             if (typeof keys[e.keyCode] != 'undefined' && forcus != null) {
                 forcus.keyPress(keys[e.keyCode]);
             }
-        };
-        
-        document.body.onclick = function() {
-            forcus.keyPress('rotate');
-        };
+        }
     </script>
  
 </body>
