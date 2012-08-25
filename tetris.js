@@ -1,5 +1,5 @@
 /*
- * Tetris Simple lib v0.1
+ * Tetris Simple lib v0.2
  * Author Takashi Matsui, 2012 Summer
  * 
  */
@@ -21,22 +21,25 @@
         'yellow', 'pink', 'lime', 'olive', 'navy', 'aqua', 'blue'
     ];
 
-    function Tetris(){
+    function Tetris(dom){
         var _this = this;
-        var canvas = document.createElement('canvas');
-        canvas.width = BLOCK * COLS;
-        canvas.height = BLOCK * ROWS;
-        document.body.appendChild(canvas);
-        this.ctx = canvas.getContext('2d');
+        var _dom = dom || document.body;
+        var _canvas = document.createElement('canvas');
+        
+        _canvas.width = BLOCK * COLS;
+        _canvas.height = BLOCK * ROWS;
+        _dom.appendChild(_canvas);
+        
+        this.ctx = _canvas.getContext('2d');
         this.board = [];
         this.current = null;
         this.currentX = this.currentY = 0;
         this.timer1 = this.timer2 = null;
         this.init();
         this.start();
-        canvas.addEventListener("touchstart", function(e){flick(e, _this)}, false);
-        canvas.addEventListener("touchmove", function(e){flick(e, _this)}, false);
-        canvas.addEventListener("touchend", function(e){flick(e, _this)}, false);
+        _canvas.addEventListener("touchstart", function(e){flick(e, _this)}, false);
+        _canvas.addEventListener("touchmove", function(e){flick(e, _this)}, false);
+        _canvas.addEventListener("touchend", function(e){flick(e, _this)}, false);
     }
     
     Tetris.prototype.restart = function(){

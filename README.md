@@ -5,9 +5,10 @@ tetris
 
 DEMO : http://tetrislib.herokuapp.com
 
-To create Tetris object:
+To create a Tetris object:
 
-    var tetris = new Tetris();  
+    var tetris = new Tetris(element);
+        element => DOM element in which the tetris object should be placed
   
 Start/Stop :
 
