@@ -1,5 +1,5 @@
 /*
- * Tetris Simple lib v0.2
+ * Tetris Simple lib v0.21
  * Author Takashi Matsui, 2012 Summer
  * 
  */
@@ -20,8 +20,42 @@
     var colors = [
         'yellow', 'pink', 'lime', 'olive', 'navy', 'aqua', 'blue'
     ];
-
-    function Tetris(dom){
+    
+    var drag = (function() {
+        var drag = false;
+        var startX = startY = diffX = diffY = 0;
+        var x = y = 0;
+        return function(e, obj) {
+            e.preventDefault();
+            if (e.type == 'mousedown') {
+                drag = true;
+                startX = e.x;
+                startY = e.y;
+            }
+            if (drag == true) {
+                if (e.type == 'mouseup') {
+                    drag = false;
+                    diffX = startX - x;
+                    diffY = startY - y;
+                    if (diffX > FLICK) {
+                        obj.keyPress('left');
+                    } else if (diffX < -FLICK) {
+                        obj.keyPress('right');
+                    } else if (diffY > FLICK) {
+                        obj.keyPress('rotate');
+                    } else if (diffY < -FLICK) {
+                        obj.keyPress('down');
+                    }
+                }
+                if (e.type == 'mousemove') {
+                    x = e.x;
+                    y = e.y;
+                }
+            }
+        };
+    })();
+    
+    function Tetris(dom) {
         var _this = this;
         var _dom = dom || document.body;
         var _canvas = document.createElement('canvas');
@@ -40,10 +74,13 @@
         _canvas.addEventListener("touchstart", function(e){flick(e, _this)}, false);
         _canvas.addEventListener("touchmove", function(e){flick(e, _this)}, false);
         _canvas.addEventListener("touchend", function(e){flick(e, _this)}, false);
+        _canvas.addEventListener("mousedown", function(e){drag(e, _this)}, false);
+        _canvas.addEventListener("mousemove", function(e){drag(e, _this)}, false);
+        _canvas.addEventListener("mouseup", function(e){drag(e, _this)}, false);
     }
     
-    Tetris.prototype.restart = function(){
-        if (this.timer1){
+    Tetris.prototype.restart = function() {
+        if (this.timer1) {
             clearInterval(this.timer1);
             clearInterval(this.timer2);
             this.timer1 = this.timer2 = null;
@@ -52,14 +89,14 @@
         this.start();
     }
     
-    Tetris.prototype.start = function(){
+    Tetris.prototype.start = function() {
         this.timer1 = setInterval(tick, 1000, this);
         this.timer2 = setInterval(render, 1000/60, this);
         
     }
     
-    Tetris.prototype.stop = function(){
-        if (!this.timer1){
+    Tetris.prototype.stop = function() {
+        if (!this.timer1) {
             this.start();
         } else {
             clearInterval(this.timer1);
@@ -164,7 +201,7 @@
             tetris.currentY++;
         }
         else {
-            if (tetris.currentY == 0){
+            if (tetris.currentY == 0) {
                 var gameover = document.createElement('div');
                 gameover.innerHTML = tetris.name + 'ゲームオーバー';
                 document.body.appendChild(gameover);
@@ -243,29 +280,28 @@
     function flick(e, obj) {
         e.preventDefault();
         var touch = e.touches[0];
-        if(e.type == "touchstart"){
+        if (e.type == "touchstart") {
             obj.startX = touch.pageX;
             obj.startY = touch.pageY;
         }
-        if(e.type == "touchmove"){
+        if (e.type == "touchmove") {
             obj.moveX = touch.pageX;
             obj.moveY = touch.pageY;
         }
-        if(e.type == "touchend"){
+        if (e.type == "touchend") {
             var diffX = obj.startX - obj.moveX;
             var diffY = obj.startY - obj.moveY;
-            if (diffX > FLICK){
+            if (diffX > FLICK) {
                 obj.keyPress('left');
-            } else if (diffX < -FLICK){
+            } else if (diffX < -FLICK) {
                 obj.keyPress('right');
-            } else if (diffY > FLICK){
+            } else if (diffY > FLICK) {
                 obj.keyPress('rotate');
-            } else if (diffY < -FLICK){
+            } else if (diffY < -FLICK) {
                 obj.keyPress('down');
             }
         }
     }
-
 
     window.Tetris = Tetris;
     
