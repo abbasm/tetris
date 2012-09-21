@@ -1,5 +1,5 @@
 /*
- * Tetris Simple lib v0.21
+ * Tetris Simple lib v0.23
  * Author Takashi Matsui, 2012 Summer
  * 
  */
@@ -7,7 +7,7 @@
 (function (window){
     var document = window.document;
     
-    var COLS = 10, ROWS = 15, BLOCK = 20, FLICK = 50;
+    var COLS = 10, ROWS = 15, BLOCK = 20, FLICK = 30;
     var shapes = [
         [ 1, 1, 1, 1 ],
         [ 1, 1, 1, 0,  1 ],
@@ -69,14 +69,17 @@
         this.current = null;
         this.currentX = this.currentY = 0;
         this.timer1 = this.timer2 = null;
+        this.dom = _dom;
+        
+        _canvas.addEventListener("touchstart", function(e) { flick(e, _this); }, false);
+        _canvas.addEventListener("touchmove", function(e) { flick(e, _this); }, false);
+        _canvas.addEventListener("touchend", function(e) { flick(e, _this); }, false);
+        _canvas.addEventListener("mousedown", function(e) { drag(e, _this); }, false);
+        _canvas.addEventListener("mousemove", function(e) { drag(e, _this); }, false);
+        _canvas.addEventListener("mouseup", function(e) { drag(e, _this); }, false);
+        
         this.init();
         this.start();
-        _canvas.addEventListener("touchstart", function(e){flick(e, _this)}, false);
-        _canvas.addEventListener("touchmove", function(e){flick(e, _this)}, false);
-        _canvas.addEventListener("touchend", function(e){flick(e, _this)}, false);
-        _canvas.addEventListener("mousedown", function(e){drag(e, _this)}, false);
-        _canvas.addEventListener("mousemove", function(e){drag(e, _this)}, false);
-        _canvas.addEventListener("mouseup", function(e){drag(e, _this)}, false);
     }
     
     Tetris.prototype.restart = function() {
@@ -85,14 +88,20 @@
             clearInterval(this.timer2);
             this.timer1 = this.timer2 = null;
         }
+        var rmobj = this.dom.getElementsByTagName('div');
+        if (rmobj[0]) {
+            this.dom.removeChild(rmobj[0]);
+        }
         this.init();
         this.start();
     }
     
     Tetris.prototype.start = function() {
-        this.timer1 = setInterval(tick, 1000, this);
-        this.timer2 = setInterval(render, 1000/60, this);
-        
+        if (valid(this, 0, 1)) {
+            var _this = this;
+            this.timer1 = setInterval(function() { tick(_this); }, 1000);
+            this.timer2 = setInterval(function() { render(_this); }, 1000/60);
+        }
     }
     
     Tetris.prototype.stop = function() {
@@ -204,7 +213,7 @@
             if (tetris.currentY == 0) {
                 var gameover = document.createElement('div');
                 gameover.innerHTML = tetris.name + 'ゲームオーバー';
-                document.body.appendChild(gameover);
+                tetris.dom.appendChild(gameover);
                 clearInterval(tetris.timer1);
                 clearInterval(tetris.timer2);
                 tetris.timer1 = tetris.timer2 = null;
