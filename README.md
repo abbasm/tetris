@@ -1,7 +1,7 @@
-tetris
+tetris lib
 ======
 
-### A HTML5 canvas simple tetris lib 
+### A simple tetris javascript library, HTML5 canvas, for learning/educational purposes
 
 DEMO : http://tetrislib.herokuapp.com
 
@@ -21,5 +21,7 @@ Restart:
 Cursol key :
 
     tetris.keyPress(key)
+        key => 'left' ← , 'right' → , 'down' ↓ , 'rotate' ↑
+        Also flick & drag operations are enabled by default
 
 
